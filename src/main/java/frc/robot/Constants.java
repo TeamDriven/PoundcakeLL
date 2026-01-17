@@ -14,11 +14,8 @@ public class Constants {
 
     // Intake
 
-    // Pivot
-    public static final double PIVOT_REST_POS = 0; // TODO find the actual value
-    public static final double pivotInternalTicksPerDegree = 1; // TODO find the actual value
-    public static final double pivotTicksPerDegree = 1; // TODO find the actual value
-    public static final double pivotOffset = 1; // TODO find the actual value
+    // Actuation
+    public static final double GearRatio = 1;
 
     // Shooter
 

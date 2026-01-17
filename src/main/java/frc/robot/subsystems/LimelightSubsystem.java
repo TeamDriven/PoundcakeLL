@@ -41,6 +41,8 @@ public class LimelightSubsystem extends SubsystemBase {
     // System.out.println("tx" + tx);
     // System.out.println("has target" + hasTarget);
     // System.out.println("ty" + ty);
+
+    
   }
 
   public void updateOdometry() {
@@ -107,6 +109,7 @@ public class LimelightSubsystem extends SubsystemBase {
     double kP = .035;
     double targetingAngularVelocity = LimelightHelpers.getTX("limelight") * kP;
     targetingAngularVelocity *= DrivetrainConst.MaxAngularRate;
+
 
     // invert since tx is positive when the target is to the right of the crosshair
     targetingAngularVelocity *= -1.0;

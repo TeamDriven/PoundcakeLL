@@ -27,6 +27,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.BallTunnel;
 
 import frc.robot.Constants.DrivetrainConst;
 
@@ -90,11 +91,11 @@ public class RobotContainer {
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
                 // Drivetrain will execute this command periodically
-                drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getLeftY() * DrivetrainConst.MaxSpeed) // Drive forward with
+                drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getRightY() * DrivetrainConst.MaxSpeed) // Drive forward with
                                                                                                    // negative Y
                                                                                                    // (forward)
-                        .withVelocityY(joystick.getLeftX() * DrivetrainConst.MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(joystick.getRightX() * DrivetrainConst.MaxAngularRate) // Drive counterclockwise with
+                        .withVelocityY(joystick.getRightX() * DrivetrainConst.MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(-joystick.getLeftX() * DrivetrainConst.MaxAngularRate) // Drive counterclockwise with
                                                                                     // negative X (left)
                 ));
 
@@ -110,7 +111,7 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+         joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
