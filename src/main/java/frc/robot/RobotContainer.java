@@ -121,7 +121,7 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.rightTrigger().whileTrue(m_shooter.runShooterCommand(56.7, 100)).onFalse(new InstantCommand(() -> m_shooter.stopMotors()));
+        joystick.rightTrigger().whileTrue(m_shooter.runShooterCommand(75, 100)).onFalse(new InstantCommand(() -> m_shooter.stopMotors()));
         //joystick.rightBumper().whileTrue(m_intake.runIntakePercent(-0.5)).onFalse(m_intake.stopIntakeCommand());
 
     }
