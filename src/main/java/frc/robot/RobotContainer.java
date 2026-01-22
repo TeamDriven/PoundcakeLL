@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -73,9 +74,6 @@ public class RobotContainer {
 
     public static Field2d m_field = new Field2d();
 
-    public static final Intake m_intake = new Intake();
-    public static final Shooter m_shooter = new Shooter();
-
     public RobotContainer() {
         SmartDashboard.putData("Field", m_field);
         configureBindings();
@@ -121,8 +119,8 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.rightTrigger().whileTrue(m_shooter.runShooterCommand(75, 100)).onFalse(new InstantCommand(() -> m_shooter.stopMotors()));
-        //joystick.rightBumper().whileTrue(m_intake.runIntakePercent(-0.5)).onFalse(m_intake.stopIntakeCommand());
+        joystick.rightTrigger().whileTrue(Subsystems.m_shooter.runShooterCommand(75, 100)).onFalse(new InstantCommand(() -> Subsystems.m_shooter.stopMotors()));
+        joystick.rightBumper().whileTrue(Subsystems.m_intake.runIntakePercent(-0.5)).onFalse(Subsystems.m_intake.stopIntakeCommand());
 
     }
 
