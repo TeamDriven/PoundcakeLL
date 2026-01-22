@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -11,7 +9,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,15 +16,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
     private TalonFX intakeMotor;
 
-    private DigitalInput peiceSensor;
-
     VelocityVoltage velocityControlFeed;
     VoltageOut voltageControl;
     NeutralOut stopMode;
 
-    public Intake(int motorId, int sensorId) {
+    public Intake(int motorId) {
         intakeMotor = new TalonFX(motorId);
-        peiceSensor = new DigitalInput(sensorId);
         initIntakeMotor();
 
         velocityControlFeed = new VelocityVoltage(0);
@@ -206,10 +200,6 @@ public class Intake extends SubsystemBase {
      */
     public double getVelocity() {
         return intakeMotor.getVelocity().getValueAsDouble();
-    }
-
-    public BooleanSupplier isSensorTripped() {
-        return () -> peiceSensor.get();
     }
 
     @Override

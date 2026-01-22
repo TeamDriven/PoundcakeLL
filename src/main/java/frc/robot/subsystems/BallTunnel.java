@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * It provides methods to initialize, run, and stop the ballTunnel motor, as well as
  * check its speed and create commands to control it.
  */
-
 public class BallTunnel extends SubsystemBase {
   private TalonFX ballTunnelMotor;
 
@@ -93,7 +92,7 @@ public class BallTunnel extends SubsystemBase {
 
       @Override
       public void end(boolean interrupted) {
-        stopBallTunnelMotor();
+        stopIndexerMotor();
       }
     };
   }
@@ -139,7 +138,7 @@ public class BallTunnel extends SubsystemBase {
   /**
    * Stop the ballTunnel motor
    */
-  public void stopBallTunnelMotor() {
+  public void stopIndexerMotor() {
     ballTunnelMotor.setControl(stopMode);
   }
 
