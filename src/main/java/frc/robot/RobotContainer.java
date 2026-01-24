@@ -38,6 +38,7 @@ import static frc.robot.Subsystems.m_indexer;
 
 import frc.robot.Constants.DrivetrainConst;
 import frc.robot.commands.OutpostAuto;
+import frc.robot.Controlls.*;
 
 public class RobotContainer {
 
@@ -95,13 +96,7 @@ public class RobotContainer {
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
                 // Drivetrain will execute this command periodically
-                drivetrain.applyRequest(() -> drive.withVelocityX(Controlls.joystick.getRightY() * DrivetrainConst.MaxSpeed) // Drive forward with
-                                                                                                   // negative Y
-                                                                                                   // (forward)
-                        .withVelocityY(Controlls.joystick.getRightX() * DrivetrainConst.MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(-Controlls.joystick.getLeftX() * DrivetrainConst.MaxAngularRate) // Drive counterclockwise with
-                                                                                    // negative X (left)
-                ));
+                drivetrain.applyRequest(Controlls.driveRequest()));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
@@ -109,32 +104,26 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
                 drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
-        Controlls.joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        Controlls.joystick.b().whileTrue(drivetrain.applyRequest(
-                () -> point.withModuleDirection(new Rotation2d(-Controlls.joystick.getLeftY(), -Controlls.joystick.getLeftX()))));
-
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        Controlls.joystick.back().and(Controlls.joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        Controlls.joystick.back().and(Controlls.joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        Controlls.joystick.start().and(Controlls.joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        Controlls.joystick.start().and(Controlls.joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // Controlls.joystick.back().and(Controlls.joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // Controlls.joystick.back().and(Controlls.joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // Controlls.joystick.start().and(Controlls.joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // Controlls.joystick.start().and(Controlls.joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
 		// reset the field-centric heading on left bumper press
-		Controlls.joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-
-		Controlls.joystick.b().whileTrue(m_ballTunnel.runBallTunnelCommand(28,100));
+		Controlls.resetHeading.onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-		Controlls.joystick.a().onTrue(drivetrain.applyRequest(DriveControls.autoHeading()))
-				.onFalse(drivetrain.applyRequest(DriveControls.driveRequest()));
+		Controlls.autoLineUp.onTrue(drivetrain.applyRequest(Controlls.autoHeading()))
+				.onFalse(drivetrain.applyRequest(Controlls.driveRequest()));
 
-		Controlls.joystick.rightTrigger().whileTrue(m_intake.runIntakePercent(-1)).onFalse(m_intake.runIntakePercent(0));
-		Controlls.joystick.rightBumper().whileTrue(m_indexer.runIndexerPercent(0.5)).onFalse(m_indexer.runIndexerPercent(0));
-		Controlls.joystick.leftTrigger().whileTrue(m_ballTunnel.runIndexerPercent(-0.75)).onFalse(m_ballTunnel.runIndexerPercent(0));
-		Controlls.joystick.leftBumper().whileTrue(m_shooter.runShooterPercent(0.5)).onFalse(m_shooter.runShooterPercent(0));
+		Controlls.intakeOut.whileTrue(m_intake.runIntakePercent(-1)).onFalse(m_intake.runIntakePercent(0));
+		Controlls.intakeIn.whileTrue(m_indexer.runIndexerPercent(0.5)).onFalse(m_indexer.runIndexerPercent(0));
+		Controlls.climberDown.whileTrue(m_ballTunnel.runIndexerPercent(-0.75)).onFalse(m_ballTunnel.runIndexerPercent(0));
+		Controlls.shoot.whileTrue(m_shooter.runShooterPercent(0.6)).onFalse(m_shooter.runShooterPercent(0));
 
 		// new Trigger(m_intake.isSensorTripped()).onTrue(m_intake.feedCommand(50, 100)).onFalse(m_intake.stopIntakeCommand());
 
