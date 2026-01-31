@@ -59,6 +59,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("limelight TX",LimelightHelpers.getTX("limelight"));
     SmartDashboard.putNumber("limelight TY",LimelightHelpers.getTY("limelight"));
     SmartDashboard.putNumber("limelight TA",LimelightHelpers.getTA("limelight"));
+    Subsystems.m_limelight.updateOdometry();
+    // Subsystems.m_limelight2.updateOdometry();
+    System.out.println("X Pos: " + m_poseEstimator.getEstimatedPosition().getX());
+    System.out.println("Y Pos: " + m_poseEstimator.getEstimatedPosition().getY());
+    System.out.println("Rot: " + m_poseEstimator.getEstimatedPosition().getRotation());
   }
 
   @Override
