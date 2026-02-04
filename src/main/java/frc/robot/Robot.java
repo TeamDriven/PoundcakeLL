@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.net.WebServer;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -51,6 +53,8 @@ public class Robot extends TimedRobot {
         initialGyroAngle,
         initialModulePositions,
         initialPose);
+
+    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
   }
 
   @Override
