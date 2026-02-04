@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static frc.robot.Subsystems.m_limelight;
 
 public class Controls {
-        private static final CommandXboxController joystick = new CommandXboxController(0);
+        public static final CommandXboxController joystick = new CommandXboxController(0);
 
         public static final Trigger climberUp = joystick.pov(90);
         public static final Trigger climberDown = joystick.pov(270);
@@ -26,7 +26,8 @@ public class Controls {
         public static final Trigger shoot = joystick.rightBumper();
         public static final Trigger autoLineUp = joystick.a();
 
-        public static final boolean isRightStickDrive = true;
+        // TODO To change drive to be on left stick make sure isRightStickDrive is false MATYLDA!
+        public static final boolean isRightStickDrive = false;
 
         private static final SwerveRequest.FieldCentric driveF = new SwerveRequest.FieldCentric()
                         .withDeadband(DrivetrainConst.MaxSpeed * 0.1)
