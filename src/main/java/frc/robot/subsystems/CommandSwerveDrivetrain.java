@@ -2,12 +2,14 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -17,6 +19,7 @@ import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -31,13 +34,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.LimelightHelpers;
+import frc.robot.RobotContainer;
 import frc.robot.Subsystems;
+import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import static frc.robot.Robot.m_gyro;
 import static frc.robot.RobotContainer.backLeft;
 import static frc.robot.RobotContainer.frontLeft;
 import static frc.robot.RobotContainer.backRight;
 import static frc.robot.RobotContainer.frontRight;
+import static frc.robot.Robot.m_poseEstimator;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -453,5 +459,22 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
+    }
+
+    public SwerveModulePosition[] getModulePositions(){
+        SwerveModulePosition[] states=new SwerveModulePosition[4];
+        for(int i=0;i<4;i++){
+            states[i]=this.getModules()[i].getPosition(true);
+        }
+        return states;
+    }
+
+    public void setPose(Pose2d pose) {
+        System.out.println("Setting pose to X: " + pose.getX() + ", Y: " + pose.getY() + ", Rot: " + pose.getRotation().getDegrees());
+        m_poseEstimator.resetPosition(m_gyro.getRotation2d(), getModulePositions(), pose);
+    }
+
+    public Pose2d getPose(){
+        return m_poseEstimator.getEstimatedPosition();
     }
 }

@@ -88,16 +88,20 @@ public class Robot extends TimedRobot {
         m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement1.pose, llMeasurement1.timestampSeconds);
       }
 
-      // LimelightHelpers.SetRobotOrientation("limelight-back", headingDeg, 0, 0, 0, 0, 0);
-      // var llMeasurement2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-back");
-      // if (llMeasurement2 != null && llMeasurement2.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
-      //   m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement2.pose, llMeasurement2.timestampSeconds);
+      // LimelightHelpers.SetRobotOrientation("limelight-back", headingDeg, 0, 0, 0,
+      // 0, 0);
+      // var llMeasurement2 =
+      // LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-back");
+      // if (llMeasurement2 != null && llMeasurement2.tagCount > 0 &&
+      // Math.abs(omegaRps) < 2.0) {
+      // m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement2.pose,
+      // llMeasurement2.timestampSeconds);
       // }
     }
-    System.out.println("Y " + m_robotContainer.drivetrain.getState().Pose.getX());
-    System.out.println("X " + m_robotContainer.drivetrain.getState().Pose.getY());
-    System.out.println("Rot " + m_robotContainer.drivetrain.getState().Pose.getRotation());
-    RobotContainer.m_field.setRobotPose( m_robotContainer.drivetrain.getState().Pose);
+    SmartDashboard.putNumber("X", m_robotContainer.drivetrain.getState().Pose.getX());
+    SmartDashboard.putNumber("Y", m_robotContainer.drivetrain.getState().Pose.getY());
+    SmartDashboard.putNumber("Rot", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees());
+    RobotContainer.m_field.setRobotPose(m_robotContainer.drivetrain.getState().Pose);
   }
 
   @Override
