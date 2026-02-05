@@ -19,6 +19,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -83,6 +85,8 @@ public class RobotContainer {
                         m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
         public static Field2d m_field = new Field2d();
+
+        public static final PowerDistribution m_pdh = new PowerDistribution(30, ModuleType.kRev);
 
         public RobotContainer() {
                 SmartDashboard.putData("Field", m_field);

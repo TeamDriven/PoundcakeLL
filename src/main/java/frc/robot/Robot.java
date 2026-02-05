@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -55,6 +57,8 @@ public class Robot extends TimedRobot {
         initialPose);
 
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+    DogLog.setOptions(new DogLogOptions().withCaptureDs(true));
+    DogLog.setPdh(RobotContainer.m_pdh);
   }
 
   @Override
