@@ -58,7 +58,7 @@ public class LimelightSubsystem extends SubsystemBase {
   }
 
   public double getAprilTag() {
-    SmartDashboard.putNumber("April Tag Number", LimelightHelpers.getFiducialID(VisionConsts.LIMELIGHT_NAME));
+    SmartDashboard.putNumber("April Tag Number" + limeLightName, LimelightHelpers.getFiducialID(limeLightName));
     return LimelightHelpers.getFiducialID(VisionConsts.LIMELIGHT_NAME);
   }
 
@@ -81,5 +81,7 @@ public class LimelightSubsystem extends SubsystemBase {
     return -1;
 
   }
+
+
 
 }

@@ -9,6 +9,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.Constants.DrivetrainConst;
 
 import frc.robot.Constants.VisionConsts;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -24,10 +25,11 @@ public class Controls {
         public static final Trigger cancel = joystick.y();
         public static final Trigger resetHeading = joystick.start();
         public static final Trigger shoot = joystick.rightBumper();
-        public static final Trigger autoLineUp = joystick.a();
+        public static final Trigger autoLineUpOn = joystick.a();
+        public static final Trigger autoLineUpOff = joystick.b();
 
         // TODO To change drive to be on left stick make sure isRightStickDrive is false MATYLDA!
-        public static final boolean isRightStickDrive = false;
+        public static final boolean isRightStickDrive = true;
 
         private static final SwerveRequest.FieldCentric driveF = new SwerveRequest.FieldCentric()
                         .withDeadband(DrivetrainConst.MaxSpeed * 0.1)
@@ -92,35 +94,35 @@ public class Controls {
                 }
         }
 
-        // public static Supplier<SwerveRequest> localHeading() {
+        public static Supplier<SwerveRequest> localHeading(Pose2d target) {
 
-        //         final DoubleSupplier targetAngle = () -> {
-        //                 double dx = Constants.FieldConst.RED_HUB.getX()
-        //                                 - Robot.m_poseEstimator.getEstimatedPosition().getX();
+                final DoubleSupplier targetAngle = () -> {
+                        double dx = target.getX()
+                                        - RobotContainer.drivetrain.getState().Pose.getX();
 
-        //                 double dy = Constants.FieldConst.RED_HUB.getY()
-        //                                 - Robot.m_poseEstimator.getEstimatedPosition().getY();
+                        double dy = target.getY()
+                                        - RobotContainer.drivetrain.getState().Pose.getY();
 
-        //                 return Math.atan2(dy, -dx); // radians
-        //         };
+                        return Math.atan2(dy, dx); // radians
+                };
 
-        //         final DoubleSupplier rotationRate = () -> {
-        //                 double currentHeading = Robot.m_poseEstimator.getEstimatedPosition().getRotation().getRadians();
-        //                 double error = targetAngle.getAsDouble() - currentHeading;
+                final DoubleSupplier rotationRate = () -> {
+                        double currentHeading = RobotContainer.drivetrain.getState().Pose.getRotation().getRadians();
+                        double error = targetAngle.getAsDouble() - currentHeading;
 
-        //                 // Wrap to [-pi, pi]
-        //                 error = Math.atan2(Math.sin(error), Math.cos(error));
+                        // Wrap to [-pi, pi]
+                        error = Math.atan2(Math.sin(error), Math.cos(error));
 
-        //                 return error * DrivetrainConst.MaxAngularRate; // simple P controller
-        //         };
+                        return error * DrivetrainConst.MaxAngularRate; // simple P controller
+                };
 
-        //         return () -> driveF
-        //                         .withVelocityX(-(isRightStickDrive ? joystick.getRightY() : joystick.getLeftY())
-        //                                         * DrivetrainConst.MaxSpeed)
-        //                         .withVelocityY(
-        //                                         -(isRightStickDrive ? joystick.getRightX() : joystick.getLeftX())
-        //                                                         * DrivetrainConst.MaxSpeed)
-        //                         .withRotationalRate(rotationRate.getAsDouble());
-        // }
+                return () -> driveF
+                                .withVelocityX(-(isRightStickDrive ? joystick.getRightY() : joystick.getLeftY())
+                                                * DrivetrainConst.MaxSpeed)
+                                .withVelocityY(
+                                                -(isRightStickDrive ? joystick.getRightX() : joystick.getLeftX())
+                                                                * DrivetrainConst.MaxSpeed)
+                                .withRotationalRate(rotationRate.getAsDouble());
+        }
 
 }

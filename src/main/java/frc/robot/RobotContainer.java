@@ -59,6 +59,9 @@ public class RobotContainer {
 
         public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+        /* Path follower */
+        private final AutoFactory autoFactory;
+        private final OutpostAuto outpostAuto;
         private final AutoChooser autoChooser = new AutoChooser();
 
         public static SwerveModulePosition frontRight;
@@ -90,12 +93,18 @@ public class RobotContainer {
 
         public RobotContainer() {
                 SmartDashboard.putData("Field", m_field);
-                configureBindings();
+                autoFactory = drivetrain.createAutoFactory();
+                outpostAuto = new OutpostAuto(autoFactory);
+
+                autoChooser.addRoutine("Outpost Auto", outpostAuto::simplePathAuto);
+                SmartDashboard.putData("Auto Chooser", autoChooser);
 
                 frontLeft = drivetrain.getState().ModulePositions[0];
                 frontRight = drivetrain.getState().ModulePositions[1];
                 backLeft = drivetrain.getState().ModulePositions[2];
                 backRight = drivetrain.getState().ModulePositions[3];
+
+                configureBindings();
         }
 
         private void configureBindings() {
@@ -123,8 +132,10 @@ public class RobotContainer {
 
                 drivetrain.registerTelemetry(logger::telemeterize);
 
-                // Controls.autoLineUp.onTrue(drivetrain.applyRequest(Controls.localHeading()))
+                Controls.autoLineUpOn.onTrue(drivetrain.applyRequest(Controls.localHeading(Constants.FieldConst.RED_HUB)));
                 // .onFalse(drivetrain.applyRequest(Controls.driveRequest()));
+                Controls.autoLineUpOff.onTrue(drivetrain.applyRequest(Controls.driveRequest()));
+                
 
                 // Controls.intakeOut.whileTrue(m_intake.runIntakePercent(-1)).onFalse(m_intake.runIntakePercent(0));
                 // Controls.intakeIn.whileTrue(m_indexer.runIndexerPercent(0.5)).onFalse(m_indexer.runIndexerPercent(0));
@@ -138,17 +149,19 @@ public class RobotContainer {
                 // 100)).onFalse(m_intake.stopIntakeCommand());
 
                 Controls.joystick
-                        .button(8)
-                        .onTrue(
-                                Commands.runOnce(
-                                        () ->
-                                                drivetrain.setPose(
-                                                        new Pose2d(drivetrain.getPose().getTranslation(), new Rotation2d())),
-                                        drivetrain)
-                                .ignoringDisable(true));
+                                .button(8)
+                                .onTrue(
+                                                Commands.runOnce(
+                                                                () -> drivetrain.setPose(
+                                                                                new Pose2d(drivetrain.getPose()
+                                                                                                .getTranslation(),
+                                                                                                new Rotation2d())),
+                                                                drivetrain)
+                                                                .ignoringDisable(true));
         }
 
         public Command getAutonomousCommand() {
-                return Commands.print("No autonomous command configured");
+                // return autoChooser.selectedCommand();
+                return null;
         }
 }

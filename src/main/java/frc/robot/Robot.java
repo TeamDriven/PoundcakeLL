@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.LimelightSubsystem;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 
@@ -83,13 +84,27 @@ public class Robot extends TimedRobot {
 
     if (kUseLimelight) {
       var driveState = RobotContainer.drivetrain.getState();
-      double headingDeg = driveState.Pose.getRotation().getDegrees();
-      double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+      double omegaRps = Units.radiansToRotations(
+          driveState.Speeds.omegaRadiansPerSecond);
 
-      LimelightHelpers.SetRobotOrientation("limelight-front", headingDeg, 0, 0, 0, 0, 0);
-      var llMeasurement1 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-front");
-      if (llMeasurement1 != null && llMeasurement1.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
-        RobotContainer.drivetrain.addVisionMeasurement(llMeasurement1.pose, llMeasurement1.timestampSeconds);
+      // FRONT LIMELIGHT — MEGATAG 1
+      var llMeasurement1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
+
+      if (llMeasurement1 != null && llMeasurement1.tagCount > 0
+          && Math.abs(omegaRps) < 2.0) {
+        RobotContainer.drivetrain.addVisionMeasurement(
+            llMeasurement1.pose,
+            llMeasurement1.timestampSeconds);
+      }
+
+      // BACK LIMELIGHT — MEGATAG 1
+      var llMeasurement2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-back");
+
+      if (llMeasurement2 != null && llMeasurement2.tagCount > 0
+          && Math.abs(omegaRps) < 2.0) {
+        RobotContainer.drivetrain.addVisionMeasurement(
+            llMeasurement2.pose,
+            llMeasurement2.timestampSeconds);
       }
 
       // LimelightHelpers.SetRobotOrientation("limelight-back", headingDeg, 0, 0, 0,
@@ -102,10 +117,13 @@ public class Robot extends TimedRobot {
       // llMeasurement2.timestampSeconds);
       // }
     }
-    // SmartDashboard.putNumber("X", m_robotContainer.drivetrain.getState().Pose.getX());
-    // SmartDashboard.putNumber("Y", m_robotContainer.drivetrain.getState().Pose.getY());
-    // SmartDashboard.putNumber("Rot", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees());
+    SmartDashboard.putNumber("X", m_robotContainer.drivetrain.getState().Pose.getX());
+    SmartDashboard.putNumber("Y", m_robotContainer.drivetrain.getState().Pose.getY());
+    SmartDashboard.putNumber("Rot", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees());
     RobotContainer.m_field.setRobotPose(RobotContainer.drivetrain.getState().Pose);
+    Subsystems.m_limelight.getAprilTag();
+    Subsystems.m_limelight2.getAprilTag();
+
   }
 
   @Override
@@ -146,6 +164,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    // System.out.println("leftX: " + Controls.joystick.getLeftX());
+    // System.out.println("rightX: " + Controls.joystick.getRightX());
+    // System.out.println("rightY: " + Controls.joystick.getRightY());
+    try {
+      System.out.println("Drive Request: " + RobotContainer.drivetrain.getDefaultCommand());
+    } catch (Exception e) {
+      System.out.println("gayBoy: " + e);
+    }
   }
 
   @Override
