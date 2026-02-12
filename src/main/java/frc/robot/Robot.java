@@ -119,6 +119,10 @@ public class Robot extends TimedRobot {
 
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
+      DogLog.log("selected auto", m_autonomousCommand.getName());
+    } else {
+      // No auto selected
+      DogLog.log("selected auto", "none");
     }
   }
 

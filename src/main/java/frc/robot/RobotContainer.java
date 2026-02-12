@@ -41,6 +41,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 import frc.robot.Constants.DrivetrainConst;
 import frc.robot.Controls.*;
+import frc.robot.commands.autos.JaydensTestAuto;
 // import frc.robot.commands.ShootCommand;
 import frc.robot.commands.autos.OutpostAuto;
 
@@ -60,8 +61,9 @@ public class RobotContainer {
         public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
         /* Path follower */
-        private final AutoFactory autoFactory;
+        public static AutoFactory autoFactory;
         private final OutpostAuto outpostAuto;
+        private final JaydensTestAuto jaydensTestAuto;
         private final AutoChooser autoChooser = new AutoChooser();
 
         public static SwerveModulePosition frontRight;
@@ -95,14 +97,20 @@ public class RobotContainer {
                 SmartDashboard.putData("Field", m_field);
                 autoFactory = drivetrain.createAutoFactory();
                 outpostAuto = new OutpostAuto(autoFactory);
+                jaydensTestAuto = new JaydensTestAuto(autoFactory);
 
                 autoChooser.addRoutine("Outpost Auto", outpostAuto::simplePathAuto);
+                autoChooser.addRoutine("Jaydens Test", jaydensTestAuto::jaydensTestAuto);
                 SmartDashboard.putData("Auto Chooser", autoChooser);
 
                 frontLeft = drivetrain.getState().ModulePositions[0];
                 frontRight = drivetrain.getState().ModulePositions[1];
                 backLeft = drivetrain.getState().ModulePositions[2];
                 backRight = drivetrain.getState().ModulePositions[3];
+
+                SmartDashboard.putBoolean("test1", false);
+                SmartDashboard.putBoolean("test2", false);
+                SmartDashboard.putBoolean("test3", false);
 
                 configureBindings();
         }
@@ -135,7 +143,8 @@ public class RobotContainer {
                 // Controls.autoLineUpOn.onTrue(drivetrain.applyRequest(Controls.localHeading(Constants.FieldConst.RED_HUB)));
                 // Controls.autoLineUpOff.onTrue(drivetrain.applyRequest(Controls.driveRequest()));
                 Controls.autoLineUpOn
-                                .onTrue(drivetrain.applyRequest(Controls.goToPositionAndRotation(new Pose2d(14, 5, new Rotation2d(0)), Constants.FieldConst.RED_HUB)))
+                                .onTrue(drivetrain.applyRequest(Controls.goToPositionAndRotation(
+                                                new Pose2d(14, 5, new Rotation2d(0)), Constants.FieldConst.RED_HUB)))
                                 .onFalse(drivetrain.applyRequest(Controls.driveRequest()));
 
                 // Controls.intakeOut.whileTrue(m_intake.runIntakePercent(-1)).onFalse(m_intake.runIntakePercent(0));
@@ -162,7 +171,7 @@ public class RobotContainer {
         }
 
         public Command getAutonomousCommand() {
-                // return autoChooser.selectedCommand();
-                return null;
+                return autoChooser.selectedCommand();
+                // return null;
         }
 }
