@@ -98,21 +98,31 @@ public class Controls {
          */
         public static Supplier<SwerveRequest> goToPositionAndRotation(Pose2d targetPose, Pose2d targetPointTo) {
                 final DoubleSupplier xSpeed = () -> {
-                        double errorX = targetPose.getX()
-                                        - RobotContainer.drivetrain.getState().Pose.getX();
+                        DoubleSupplier errorX = () -> (targetPose.getX()
+                                        - RobotContainer.drivetrain.getState().Pose.getX());
+                        System.out.println(errorX.getAsDouble());
 
+                        if (Math.abs(errorX.getAsDouble()) < 0.03) { // 3 cm
+                                return 0.0;
+                        }
+                        
+                        // 1.5 is how fast to move to position
                         return MathUtil.clamp(
-                                        errorX * 0.5,
+                                        errorX.getAsDouble() * 1.5,
                                         -DrivetrainConst.MaxSpeed,
                                         DrivetrainConst.MaxSpeed);
                 };
 
                 final DoubleSupplier ySpeed = () -> {
-                        double errorY = targetPose.getY()
-                                        - RobotContainer.drivetrain.getState().Pose.getY();
+                        DoubleSupplier errorY = () -> (targetPose.getY()
+                                        - RobotContainer.drivetrain.getState().Pose.getY());
 
+                        if (Math.abs(errorY.getAsDouble()) < 0.03) { // 3 cm
+                                return 0.0;
+                        }
+                        // 1.5 is how fast to move to position
                         return MathUtil.clamp(
-                                        errorY * 0.5,
+                                        errorY.getAsDouble() * 1.5,
                                         -DrivetrainConst.MaxSpeed,
                                         DrivetrainConst.MaxSpeed);
                 };
@@ -136,6 +146,11 @@ public class Controls {
                         // Wrap to [-pi, pi]
                         error = Math.atan2(Math.sin(error), Math.cos(error));
 
+                        
+                        if (Math.abs(error) < 0.03) {
+                                return 0.0;
+                        }
+
                         return error * DrivetrainConst.MaxAngularRate; // simple P controller
                 };
 
@@ -143,6 +158,7 @@ public class Controls {
                                 .withVelocityX(-xSpeed.getAsDouble())
                                 .withVelocityY(-ySpeed.getAsDouble())
                                 .withRotationalRate(rotationRate.getAsDouble());
+                // .withRotationalRate(0);
         }
 
         /*
@@ -194,7 +210,7 @@ public class Controls {
                 return () -> driveF
                                 .withVelocityX(-xSpeed.getAsDouble())
                                 .withVelocityY(-ySpeed.getAsDouble())
-                                .withRotationalRate(rotationRate.getAsDouble());
+                                .withRotationalRate(0);
         }
 
 }
