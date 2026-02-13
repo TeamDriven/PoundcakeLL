@@ -11,6 +11,10 @@ import frc.robot.Constants.DrivetrainConst;
 import frc.robot.Constants.VisionConsts;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,8 +33,6 @@ public class Controls {
         public static final Trigger autoLineUpOn = joystick.a();
         public static final Trigger autoLineUpOff = joystick.b();
 
-        // TODO To change drive to be on left stick make sure isRightStickDrive is false
-        // MATYLDA!
         public static final boolean isRightStickDrive = true;
 
         private static final SwerveRequest.FieldCentric driveF = new SwerveRequest.FieldCentric()
@@ -105,7 +107,7 @@ public class Controls {
                         if (Math.abs(errorX.getAsDouble()) < 0.03) { // 3 cm
                                 return 0.0;
                         }
-                        
+
                         // 1.5 is how fast to move to position
                         return MathUtil.clamp(
                                         errorX.getAsDouble() * 1.5,
@@ -146,7 +148,6 @@ public class Controls {
                         // Wrap to [-pi, pi]
                         error = Math.atan2(Math.sin(error), Math.cos(error));
 
-                        
                         if (Math.abs(error) < 0.03) {
                                 return 0.0;
                         }
