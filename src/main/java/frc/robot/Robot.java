@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
-  public static final Pigeon2 m_gyro = new Pigeon2(TunerConstants.kPigeonId);
+  public static final Pigeon2 m_gyro = new Pigeon2(TunerConstants.kPigeonId, TunerConstants.kCANBus);
   public static SwerveDrivePoseEstimator m_poseEstimator;
   private final boolean kUseLimelight = true;
 

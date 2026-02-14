@@ -40,7 +40,9 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 // import static frc.robot.Subsystems.m_indexer;
 
 import frc.robot.Constants.DrivetrainConst;
-import frc.robot.commands.autos.NeutralZoneAuto;
+import frc.robot.commands.autos.DepotAuto;
+import frc.robot.commands.autos.NeutralDepotAuto;
+import frc.robot.commands.autos.NeutralOutpostAuto;
 // import frc.robot.commands.ShootCommand;
 import frc.robot.commands.autos.OutpostAuto;
 
@@ -62,7 +64,9 @@ public class RobotContainer {
         /* Path follower */
         public static AutoFactory autoFactory;
         private final OutpostAuto outpostAuto;
-        private final NeutralZoneAuto neutralZoneAuto;
+        private final NeutralOutpostAuto neutralZoneOutpostAuto;
+        private final NeutralDepotAuto neutralZoneDepotAuto;
+        private final DepotAuto depotAuto;
         private final AutoChooser autoChooser = new AutoChooser();
 
         public static SwerveModulePosition frontRight;
@@ -96,10 +100,14 @@ public class RobotContainer {
                 SmartDashboard.putData("Field", m_field);
                 autoFactory = drivetrain.createAutoFactory();
                 outpostAuto = new OutpostAuto(autoFactory);
-                neutralZoneAuto = new NeutralZoneAuto(autoFactory);
+                neutralZoneOutpostAuto = new NeutralOutpostAuto(autoFactory);
+                neutralZoneDepotAuto = new NeutralDepotAuto(autoFactory);
+                depotAuto = new DepotAuto(autoFactory);
 
+                autoChooser.addRoutine("Depot Auto", depotAuto::simplePathAuto);
                 autoChooser.addRoutine("Outpost Auto", outpostAuto::simplePathAuto);
-                autoChooser.addRoutine("Neutral Zone Auto", neutralZoneAuto::neutralZoneAuto);
+                autoChooser.addRoutine("Neutral Zone Depot Auto", neutralZoneDepotAuto::neutralZoneAuto);
+                autoChooser.addRoutine("Neutral Zone Outpost Auto", neutralZoneOutpostAuto::neutralZoneAuto);
                 SmartDashboard.putData("Auto Chooser", autoChooser);
 
                 frontLeft = drivetrain.getState().ModulePositions[0];
