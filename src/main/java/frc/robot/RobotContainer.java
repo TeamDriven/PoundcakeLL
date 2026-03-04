@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.subsystems.Intake;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.jni.SwerveJNI.ModulePosition;
 
@@ -47,7 +48,7 @@ import frc.robot.commands.autos.NeutralOutpostAuto;
 import frc.robot.commands.autos.OutpostAuto;
 
 public class RobotContainer {
-
+       Intake motor = new Intake(23);
         /* Setting up bindings for necessary control of the swerve drive platform */
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
                         .withDeadband(DrivetrainConst.MaxSpeed * 0.1)
@@ -175,8 +176,9 @@ public class RobotContainer {
                                                                                                 new Rotation2d())),
                                                                 drivetrain)
                                                                 .ignoringDisable(true));
+                Controls.joystick.y().whileTrue(motor.runIntakePercent(20)).whileFalse(motor.feedCommand(0, 0));
+                Controls.joystick.x().whileTrue(motor.runIntakePercent(-20)).whileFalse(motor.feedCommand(0, 0));
         }
-
         public Command getAutonomousCommand() {
                 return autoChooser.selectedCommand();
                 // return null;

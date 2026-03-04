@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.LimelightSubsystem;
-import dev.doglog.DogLog;
-import dev.doglog.DogLogOptions;
+// import dev.doglog.DogLog;
+// import dev.doglog.DogLogOptions;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -58,8 +58,8 @@ public class Robot extends TimedRobot {
         initialPose);
 
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-    DogLog.setOptions(new DogLogOptions().withCaptureDs(true));
-    DogLog.setPdh(RobotContainer.m_pdh);
+    // DogLog.setOptions(new DogLogOptions().withCaptureDs(true));
+    // DogLog.setPdh(RobotContainer.m_pdh);
   }
 
   @Override
@@ -119,10 +119,10 @@ public class Robot extends TimedRobot {
 
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
-      DogLog.log("selected auto", m_autonomousCommand.getName());
+      // DogLog.log("selected auto", m_autonomousCommand.getName());
     } else {
       // No auto selected
-      DogLog.log("selected auto", "none");
+      // DogLog.log("selected auto", "none");
     }
   }
 
